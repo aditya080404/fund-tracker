@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aditya Fund Tracker</title>
+<style>
+:root{--bg:#0b0d12;--bg2:#11141b;--card:#151922;--card2:#1a1f29;--text:#f3f5f8;--muted:#929aaa;--line:#282e39;--p:#8b7cff;--p2:#b06cff;--g:#37d6a0;--r:#ff627d;--shadow:0 10px 30px #0008}
+*{box-sizing:border-box}html{font-size:16px}body{margin:0;background:radial-gradient(circle at 15% -10%,#25203d 0,#0b0d12 35%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}.top{height:64px;background:#0f1218ee;backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:10}.logo{font-size:20px;font-weight:900;letter-spacing:-.5px}.logo b{color:var(--p)}.tabs{display:flex;gap:6px;overflow:auto;flex:1;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab,.nav,.btn,.icon{border:0;cursor:pointer;border-radius:12px;padding:10px 13px;font:inherit;font-weight:750}.tab{background:#1b2029;color:#aab1c0;white-space:nowrap}.tab.on{background:#2a2750;color:#b8b0ff}.icon{background:#1b2029;color:#c1c7d3;min-width:42px;min-height:42px}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:calc(100vh - 64px)}aside{background:#0f1218;border-right:1px solid var(--line);padding:14px}.nav{display:block;width:100%;text-align:left;background:transparent;color:#9ca4b5;margin:3px 0}.nav.on,.nav:hover{background:#242039;color:#b9b1ff}.mainnav{display:none}main{max-width:1450px;width:100%;margin:auto;padding:24px}.view{display:none}.view.on{display:block}.head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:18px}.head h1{margin:0;font-size:28px;letter-spacing:-.7px}.head p{margin:5px 0;color:var(--muted)}.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:1.25fr .75fr}.card,.history-card{background:linear-gradient(145deg,#171b24,#12151c);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.label{font-size:12px;color:var(--muted);font-weight:750}.value{font-size:26px;font-weight:900;margin-top:7px}.green{color:var(--g)}.red{color:var(--r)}.btn{background:#20252f;color:#d2d6df}.primary{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff}.greenbtn{background:#12372f;color:#54e2b2}.redbtn{background:#3b1822;color:#ff7087}.scroll{overflow:visible}table{width:100%;border-collapse:collapse}th,td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left;white-space:normal;word-break:break-word}th{font-size:11px;color:var(--muted);text-transform:uppercase}.members{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.member{display:flex;align-items:center;gap:10px}.avatar{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;display:grid;place-items:center;font-weight:900}.push{margin-left:auto}.form{max-width:850px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.full{grid-column:1/-1}label{font-size:13px;font-weight:750;color:#aab1c0}input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0e1117;color:var(--text);font:inherit;outline:none}option{background:#151922;color:#fff}input:focus,select:focus,textarea:focus{border-color:#756cf0;box-shadow:0 0 0 3px #6259e326}textarea{min-height:82px;resize:vertical}.choices{display:flex;gap:8px}.choices button{flex:1;min-height:45px}.choice{background:#20252f;color:#aab1c0}.choice.active{background:#2a2750;color:#bdb5ff}.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.check{padding:11px;border:1px solid var(--line);border-radius:11px;display:flex;gap:8px;align-items:center;background:#12161e}.check input{width:auto;accent-color:var(--p)}.empty{text-align:center;color:var(--muted);padding:35px}.settle{display:grid;gap:8px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;background:#11151d;border:1px solid #222833;border-radius:12px}.arrow{color:var(--p);font-weight:900}.modal{display:none;position:fixed;inset:0;background:#000b;z-index:30;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.box{background:#151922;border:1px solid var(--line);border-radius:20px;padding:21px;width:min(550px,100%);box-shadow:0 25px 70px #000b}.modalhead{display:flex;justify-content:space-between;align-items:center}.modalhead h2{margin:0}.toast{position:fixed;left:50%;bottom:85px;transform:translateX(-50%);background:#e9e7ff;color:#29264c;padding:11px 16px;border-radius:12px;display:none;z-index:40;white-space:nowrap;font-weight:750}
+.spend-head .eyebrow,.spend-kicker{font-size:10px;font-weight:900;letter-spacing:1.4px;color:#9b92ff;margin-bottom:5px}.spend-status{display:flex;align-items:center;gap:8px;background:#141a20;border:1px solid #27322f;border-radius:999px;padding:9px 13px;font-size:12px;font-weight:800;color:#7fe0bb}.pulse-dot{width:7px;height:7px;border-radius:50%;background:#49d7a7;box-shadow:0 0 0 5px #49d7a71a}.spend-shell{max-width:900px}.spend-hero{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:20px 22px;margin-bottom:14px;border:1px solid #302d55;border-radius:20px;background:radial-gradient(circle at 90% 10%,#30295b 0,#191827 34%,#14171e 75%);box-shadow:0 18px 45px #0005}.spend-hero h2{margin:3px 0 5px;font-size:19px}.spend-hero p{margin:0;color:var(--muted);font-size:12px}.spend-icon{width:52px;height:52px;flex:0 0 52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--p),var(--p2));font-size:24px;font-weight:900;box-shadow:0 10px 25px #5e56d644}.spend-form{max-width:none;padding:22px;border-color:#2a303d;background:linear-gradient(145deg,#171b24,#10141b)}.step{display:flex;align-items:center;gap:11px;margin-bottom:13px}.step>span{width:29px;height:29px;display:grid;place-items:center;border-radius:9px;background:#292548;color:#bcb5ff;font-size:11px;font-weight:900}.step b{display:block;font-size:14px}.step small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.input-wrap{position:relative}.input-wrap .input-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#958cff;z-index:1}.payer-field select{padding-left:37px}.amount-wrap>span{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-weight:900;color:#9b92ff;z-index:1}.amount-wrap input{padding-left:34px;font-size:18px;font-weight:800}.spend-divider{height:1px;background:#252b35;margin:20px 0}.spend-choices{gap:10px}.spend-choices .choice{display:flex;align-items:center;gap:11px;text-align:left;padding:12px 14px;border:1px solid #292f3a;border-radius:14px;min-height:62px;transition:.18s}.spend-choices .choice strong{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#1a1f29;color:#aaa4ff;font-size:18px}.spend-choices .choice span{font-weight:850}.spend-choices .choice small{display:block;color:var(--muted);font-size:10px;font-weight:600;margin-top:2px}.spend-choices .choice.active{border-color:#6259e2;background:linear-gradient(135deg,#292450,#202033);box-shadow:0 8px 22px #6259e21c}.spend-checks{grid-template-columns:repeat(2,1fr);gap:9px}.spend-checks .check{min-height:49px;background:#10151c;border-color:#282f3a;transition:.18s}.spend-checks .check:hover{border-color:#5c55c9;background:#17172a}.spend-summary{margin-top:15px;padding:14px 15px;border:1px solid #29463e;border-radius:14px;background:linear-gradient(135deg,#10221e,#12181b);display:flex;align-items:center;justify-content:space-between;gap:12px}.spend-summary span{display:block;font-size:9px;letter-spacing:1.2px;font-weight:900;color:#64caa8}.spend-summary b{display:block;margin-top:4px;font-size:13px;color:#d8e2df}.summary-mark{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:#16382f;color:#54dfb2;font-weight:900}.spend-rule{margin-top:9px;color:#7e8797;font-size:10px;line-height:1.45}.spend-save{width:100%;margin-top:15px;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;font-size:14px}.spend-save b{font-size:19px}.spend-form textarea{min-height:72px}@media(max-width:850px){.spend-status{align-self:flex-start}.spend-hero{padding:17px}.spend-hero h2{font-size:17px}.spend-icon{width:44px;height:44px;flex-basis:44px}.spend-form{padding:16px}.spend-checks{grid-template-columns:1fr}.spend-choices{flex-direction:row}.spend-choices .choice{flex:1;min-width:0}.spend-choices .choice small{font-size:9px}.spend-choices .choice span{font-size:12px}}
+.history-list{display:grid;gap:13px}.history-card{padding:16px}.history-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.history-title{font-weight:850;font-size:15px}.history-meta{font-size:12px;color:var(--muted);margin-top:3px}.history-amount{font-size:19px;font-weight:900}.history-body{margin-top:13px;background:#0e1218;border:1px solid #232934;border-radius:13px;padding:11px}.split-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:14px}.history-note{margin-top:10px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:9px}.delete-tx{background:#3b1822;color:#ff7188;padding:9px 11px;border:0;border-radius:10px;font-weight:800;white-space:nowrap}
+
+.history-list{display:flex;flex-direction:column;gap:16px;width:100%}.history-card{width:100%;min-width:0;padding:18px;background:linear-gradient(145deg,#171b24,#11141a);border:1px solid #2a303b;border-radius:20px;box-shadow:0 12px 30px #0007}.history-top{display:flex;align-items:center;justify-content:space-between;gap:14px}.history-main{min-width:0;flex:1}.history-title{font-size:16px;font-weight:850;line-height:1.35}.history-meta{font-size:12px;color:var(--muted);margin-top:5px}.history-amount{font-size:20px;font-weight:900;white-space:nowrap}.history-body{margin-top:14px;padding:12px 13px;background:#0c1016;border:1px solid #252b35;border-radius:15px}.split-head{font-size:11px;font-weight:850;color:#8f98a9;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}.split-line{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #202631;font-size:14px}.split-line:last-child{border-bottom:0}.history-note{margin-top:12px;padding-top:11px;border-top:1px solid #282e39;color:#9da5b5;font-size:13px}.delete-tx{border:0;background:#391923;color:#ff748b;padding:10px 12px;border-radius:11px;font-weight:800;white-space:nowrap}.history-add{border-left:3px solid var(--g)}.history-spend{border-left:3px solid var(--p)}
+.member-history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}.member-tile{background:linear-gradient(145deg,#171b24,#11141a);border:1px solid #2a303b;border-radius:20px;padding:16px;box-shadow:0 12px 30px #0007;min-width:0}.member-tile-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.member-tile-name{font-size:17px;font-weight:900;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.member-tile-actions{display:flex;gap:7px;margin-top:11px}
+.member-tile-actions .icon{min-width:38px;min-height:38px;padding:7px;font-size:13px}
+.member-tile-amounts{display:flex;gap:10px;white-space:nowrap;font-size:13px;font-weight:850}.member-tile-amounts .give{color:var(--g)}.member-tile-amounts .spend{color:var(--r)}.member-tile-scroll{margin-top:12px;height:190px;overflow-y:auto;overflow-x:hidden;background:#0c1016;border:1px solid #252b35;border-radius:14px;padding:8px}.member-detail{padding:9px 5px;border-bottom:1px solid #202631;font-size:13px;line-height:1.4}.member-detail:last-child{border-bottom:0}.member-detail-head{display:flex;justify-content:space-between;gap:10px;font-weight:800}.member-detail-sub{color:var(--muted);margin-top:3px}.member-detail-note{color:#aeb5c3;margin-top:4px}.member-tile-footer{margin-top:10px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}@media(max-width:850px){.member-history-grid{grid-template-columns:1fr}.member-tile-scroll{height:185px}}
+
+@media(max-width:850px){body{padding-bottom:68px}.top{height:60px;padding:0 10px}.layout{display:block;min-height:auto}aside{display:none}main{padding:15px 13px 25px}.stats{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.head{flex-direction:column}.head h1{font-size:25px}.head>div:last-child{width:100%;display:flex;gap:7px;flex-wrap:wrap}.head>div:last-child .btn{flex:1}.mainnav{display:flex;position:fixed;left:0;right:0;bottom:0;height:68px;background:#0f1218f5;backdrop-filter:blur(16px);border-top:1px solid var(--line);z-index:15;padding:6px 4px;gap:2px}.mainnav button{flex:1;border:0;background:transparent;color:#747d91;font:inherit;font-size:9px;font-weight:750;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.mainnav button.on{background:#242039;color:#b9b1ff}.mainnav .mi{font-size:19px;line-height:19px}.form{max-width:none}.fields{grid-template-columns:1fr}.full{grid-column:auto}.checks{grid-template-columns:1fr}.choices{flex-direction:column}.choices button{flex:none}.members{grid-template-columns:1fr}.card,.history-card{padding:15px}.scroll{overflow:visible}.history-top{align-items:flex-start}.history-title{padding-right:2px}.delete-tx{padding:8px 9px;font-size:12px}.history-body{width:100%}.split-line{font-size:13px}.top .tabs{max-width:145px}.top .icon{min-width:36px;min-height:36px;padding:7px}}
+@media(max-width:380px){.top .tabs{max-width:105px}.stats .value{font-size:23px}.head h1{font-size:23px}}
+</style>
+
+<style id="beast-ui">
+
+:root{
+  --ayta-accent:#8b5cf6;
+  --ayta-accent-2:#a78bfa;
+  --ayta-green:#34d399;
+  --ayta-red:#fb7185;
+  --ayta-panel:rgba(18,18,24,.82);
+}
+body{
+  background:
+    radial-gradient(900px 420px at 12% -8%, rgba(139,92,246,.12), transparent 62%),
+    radial-gradient(700px 380px at 100% 18%, rgba(56,189,248,.055), transparent 64%),
+    #07070a !important;
+}
+.topbar{
+  border-bottom:1px solid rgba(255,255,255,.07)!important;
+  background:rgba(7,7,10,.82)!important;
+  backdrop-filter:blur(18px);
+}
+.brand{
+  letter-spacing:-.035em;
+  text-shadow:0 0 28px rgba(139,92,246,.16);
+}
+.sheet-tab.active{
+  box-shadow:0 0 0 1px rgba(139,92,246,.28), 0 8px 30px rgba(0,0,0,.22);
+}
+.card,.panel,.member-tile,.history-card,.settle-card,.form-card{
+  border-color:rgba(255,255,255,.075)!important;
+  background:linear-gradient(145deg,rgba(22,22,29,.94),rgba(13,13,18,.94))!important;
+  box-shadow:0 14px 45px rgba(0,0,0,.18);
+}
+.card,.member-tile,.history-card{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;}
+.card:hover,.member-tile:hover,.history-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(139,92,246,.24)!important;
+  box-shadow:0 18px 55px rgba(0,0,0,.27);
+}
+.btn{
+  border-color:rgba(255,255,255,.09)!important;
+  background:rgba(255,255,255,.035)!important;
+  transition:transform .15s ease,background .15s ease,border-color .15s ease;
+}
+.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.07)!important;border-color:rgba(139,92,246,.35)!important}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.primary{
+  background:linear-gradient(135deg,#8b5cf6,#6d3fe7)!important;
+  border-color:rgba(167,139,250,.48)!important;
+  box-shadow:0 10px 28px rgba(109,63,231,.22);
+}
+input,select,textarea{
+  border-color:rgba(255,255,255,.085)!important;
+  background:rgba(7,7,10,.66)!important;
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(139,92,246,.72)!important;
+  box-shadow:0 0 0 3px rgba(139,92,246,.12)!important;
+  outline:none!important;
+}
+.view .head h1{letter-spacing:-.045em}
+.view .head p{color:#858595}
+.kpi{
+  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(24,24,32,.95),rgba(12,12,17,.95))!important;
+}
+.kpi:after{
+  content:"";position:absolute;right:-35px;top:-55px;width:130px;height:130px;
+  border-radius:50%;border:1px solid rgba(139,92,246,.13);
+  box-shadow:0 0 0 18px rgba(139,92,246,.025),0 0 0 38px rgba(139,92,246,.018);
+  pointer-events:none;
+}
+.kpi .value{letter-spacing:-.045em}
+#spend.view .card:first-of-type{
+  border-color:rgba(139,92,246,.18)!important;
+  box-shadow:0 20px 70px rgba(70,35,150,.13);
+}
+#spend.view .card:first-of-type h2:before{
+  content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:#a78bfa;box-shadow:0 0 18px rgba(167,139,250,.75);margin:0 8px 2px 0;
+}
+#spend.view .card:nth-of-type(2){
+  background:linear-gradient(145deg,rgba(18,18,25,.96),rgba(10,10,14,.96))!important;
+}
+#spend.view .card:nth-of-type(2) h2{
+  display:flex;align-items:center;justify-content:space-between;
+}
+#spend.view .card:nth-of-type(2) h2:after{
+  content:"LIVE SPLIT";font-size:10px;letter-spacing:.12em;font-weight:800;
+  color:#a78bfa;border:1px solid rgba(139,92,246,.25);border-radius:999px;
+  padding:5px 8px;background:rgba(139,92,246,.08);
+}
+#spend .choice,#spend label:has(input[type=radio]),#spend label:has(input[type=checkbox]){
+  transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+#spend .choice:hover,#spend label:has(input[type=radio]):hover,#spend label:has(input[type=checkbox]):hover{
+  background:rgba(139,92,246,.055);
+}
+.history-card{position:relative;overflow:hidden}
+.history-card:before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(#8b5cf6,transparent);
+  opacity:.75;
+}
+.member-tile-name{letter-spacing:-.025em}
+.member-tile-scroll{scrollbar-width:thin;scrollbar-color:rgba(139,92,246,.38) transparent}
+.member-tile-scroll::-webkit-scrollbar{width:6px}
+.member-tile-scroll::-webkit-scrollbar-thumb{background:rgba(139,92,246,.32);border-radius:99px}
+nav button,[data-v]{
+  transition:color .15s ease,background .15s ease,transform .15s ease;
+}
+@media (hover:hover) and (pointer:fine){
+  nav button:hover,[data-v]:hover{background:rgba(255,255,255,.045)}
+}
+@media (max-width:700px){
+  .topbar{padding-top:8px!important}
+  .view .head{gap:12px}
+  .view .head h1{font-size:27px}
+  .card,.member-tile,.history-card{border-radius:18px!important}
+  .btn{min-height:42px}
+  #spend.view .card:first-of-type{
+    box-shadow:0 16px 45px rgba(70,35,150,.12);
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .card,.member-tile,.history-card,.btn{transition:none!important}
+}
+</style>
+
+
+<style id="beast-color-ui">
+/* AYTA BEAST COLOR UI — CSS/UX ONLY; existing JavaScript/data logic untouched */
+:root{
+  --beast-purple:#9b6cff;
+  --beast-blue:#38bdf8;
+  --beast-cyan:#22d3ee;
+  --beast-green:#34d399;
+  --beast-yellow:#fbbf24;
+  --beast-orange:#fb923c;
+  --beast-pink:#f472b6;
+  --beast-red:#fb7185;
+}
+body{
+  background:
+    radial-gradient(800px 420px at 8% 0%,rgba(155,108,255,.18),transparent 60%),
+    radial-gradient(650px 400px at 100% 8%,rgba(34,211,238,.10),transparent 62%),
+    radial-gradient(700px 450px at 70% 100%,rgba(52,211,153,.06),transparent 62%),
+    #06070b !important;
+}
+.topbar{
+  background:linear-gradient(90deg,rgba(9,8,15,.96),rgba(9,11,18,.94),rgba(8,8,14,.96))!important;
+  border-bottom:1px solid rgba(155,108,255,.22)!important;
+  box-shadow:0 8px 35px rgba(0,0,0,.28);
+}
+.brand{
+  color:#fff!important;
+  text-shadow:0 0 24px rgba(155,108,255,.32);
+}
+.brand:after{
+  content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
+  margin-left:8px;background:var(--beast-green);
+  box-shadow:0 0 14px rgba(52,211,153,.8);
+  vertical-align:middle;
+}
+.sheet-tab.active{
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(155,108,255,.30),rgba(56,189,248,.12))!important;
+  border-color:rgba(155,108,255,.5)!important;
+}
+nav{
+  background:linear-gradient(180deg,rgba(10,10,15,.98),rgba(7,7,11,.98))!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+nav button.active,[data-v].active{
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(155,108,255,.28),rgba(56,189,248,.10))!important;
+  box-shadow:inset 0 0 0 1px rgba(155,108,255,.25),0 7px 24px rgba(70,35,150,.16);
+}
+nav button.active .mi,[data-v].active .mi{color:#c4b5fd!important}
+.card,.member-tile,.history-card{
+  position:relative;
+  background:
+    linear-gradient(145deg,rgba(24,24,34,.96),rgba(10,11,17,.96))!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:0 14px 50px rgba(0,0,0,.30),inset 0 1px rgba(255,255,255,.025);
+}
+.card:hover,.member-tile:hover,.history-card:hover{
+  border-color:rgba(155,108,255,.38)!important;
+  box-shadow:0 18px 60px rgba(0,0,0,.38),0 0 0 1px rgba(155,108,255,.06);
+}
+.kpi{
+  overflow:hidden;
+  border-color:rgba(255,255,255,.09)!important;
+}
+.kpi:nth-child(1){border-top:2px solid var(--beast-purple)!important}
+.kpi:nth-child(2){border-top:2px solid var(--beast-orange)!important}
+.kpi:nth-child(3){border-top:2px solid var(--beast-blue)!important}
+.kpi:nth-child(4){border-top:2px solid var(--beast-green)!important}
+.kpi:nth-child(5){border-top:2px solid var(--beast-pink)!important}
+.kpi:nth-child(6){border-top:2px solid var(--beast-yellow)!important}
+.kpi:nth-child(1) .value{color:#c4b5fd!important}
+.kpi:nth-child(2) .value{color:#fdba74!important}
+.kpi:nth-child(3) .value{color:#7dd3fc!important}
+.kpi:nth-child(4) .value{color:#6ee7b7!important}
+.kpi:nth-child(5) .value{color:#f9a8d4!important}
+.kpi:nth-child(6) .value{color:#fde68a!important}
+.kpi:before{
+  content:"";position:absolute;left:0;top:0;width:45%;height:2px;
+  background:linear-gradient(90deg,currentColor,transparent);opacity:.65;
+}
+.btn{
+  position:relative;
+  overflow:hidden;
+  border-color:rgba(255,255,255,.11)!important;
+  background:rgba(255,255,255,.045)!important;
+  color:#ddd!important;
+}
+.btn:hover{
+  color:#fff!important;
+  border-color:rgba(155,108,255,.48)!important;
+  background:linear-gradient(135deg,rgba(155,108,255,.16),rgba(56,189,248,.07))!important;
+}
+.btn.primary{
+  background:linear-gradient(135deg,#9b6cff 0%,#6d45df 48%,#4f46e5 100%)!important;
+  border-color:rgba(196,181,253,.62)!important;
+  color:#fff!important;
+  box-shadow:0 10px 32px rgba(109,69,223,.35);
+}
+.btn.primary:hover{box-shadow:0 14px 40px rgba(109,69,223,.48)}
+input,select,textarea{
+  color:#f5f5f7!important;
+  background:linear-gradient(135deg,rgba(9,10,15,.94),rgba(18,17,27,.9))!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#9b6cff!important;
+  box-shadow:0 0 0 3px rgba(155,108,255,.13),0 0 25px rgba(155,108,255,.10)!important;
+}
+#spend.view .card{
+  border-left:3px solid rgba(155,108,255,.55)!important;
+}
+#spend.view .card:nth-of-type(2){border-left-color:rgba(34,211,238,.65)!important}
+#spend.view h1{
+  background:linear-gradient(90deg,#fff,#c4b5fd 45%,#67e8f9);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+#spend.view .card h2{color:#eee}
+#spend.view .card:first-of-type h2:before{
+  content:"✦";color:#a78bfa;margin-right:8px;text-shadow:0 0 15px rgba(167,139,250,.8)
+}
+#spend.view .card:nth-of-type(2) h2:after{
+  content:"LIVE • SPLIT";
+  margin-left:auto;
+  color:#67e8f9;
+  border:1px solid rgba(34,211,238,.30);
+  background:rgba(34,211,238,.07);
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:9px;
+  letter-spacing:.14em;
+  box-shadow:0 0 18px rgba(34,211,238,.08);
+}
+#spend input[type=radio]:checked + label,
+#spend input[type=checkbox]:checked + label{
+  accent-color:#9b6cff;
+}
+.history-card:before{
+  content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 5px 5px 0;
+  background:linear-gradient(180deg,#9b6cff,#38bdf8,#34d399);
+  box-shadow:0 0 14px rgba(155,108,255,.3);
+}
+.member-tile:nth-child(4n+1){border-top:2px solid rgba(155,108,255,.65)!important}
+.member-tile:nth-child(4n+2){border-top:2px solid rgba(56,189,248,.65)!important}
+.member-tile:nth-child(4n+3){border-top:2px solid rgba(52,211,153,.65)!important}
+.member-tile:nth-child(4n){border-top:2px solid rgba(244,114,182,.65)!important}
+.member-tile-scroll{
+  background:rgba(0,0,0,.12)!important;
+  border:1px solid rgba(255,255,255,.045);
+}
+.member-tile-actions .icon:hover{
+  border-color:rgba(155,108,255,.45)!important;
+  background:rgba(155,108,255,.10)!important;
+}
+.settle{
+  background:linear-gradient(135deg,rgba(52,211,153,.055),rgba(155,108,255,.045));
+}
+@media(max-width:700px){
+  .kpi{border-radius:17px!important}
+  .kpi .value{font-size:22px}
+  #spend.view .card{border-left-width:2px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+</style>
+
+</head>
+<body>
+<header class="top">
+<div class="logo">Aditya <b>Fund Tracker</b></div><div class="tabs" id="tabs"></div>
+<button class="icon" title="New sheet" onclick="newSheet()">＋</button><button class="icon" title="Delete current sheet" onclick="deleteSheet()">🗑</button><button class="icon" title="Clear current sheet" onclick="clearSheet()">⌫</button>
+</header>
+<div class="layout"><aside>
+<button class="nav on" data-v="dashboard">⌂ Overview</button>
+<button class="nav" data-v="members">♙ Members</button>
+<button class="nav" data-v="spend">↗ Spend / Split</button>
+<button class="nav" data-v="history">☷ History</button>
+<button class="nav" data-v="settlement">⇄ Settlement</button>
+</aside><nav class="mainnav" id="mobileNav">
+<button data-v="dashboard" class="on"><span class="mi">⌂</span>Home</button>
+<button data-v="members"><span class="mi">♙</span>Members</button>
+<button data-v="spend"><span class="mi">↗</span>Spend</button>
+<button data-v="history"><span class="mi">☷</span>History</button>
+<button data-v="settlement"><span class="mi">⇄</span>Settle</button>
+</nav><main>
+
+<section id="dashboard" class="view on">
+<div class="head"><div><h1 id="title">Overview</h1><p>Local-only fund tracking. Data stays in this browser.</p></div><div><button class="btn" onclick="memberModal()">＋ Add member</button> <button class="btn" onclick="go('history')">☷ Overall History</button> <button class="btn primary" onclick="go('spend')">↗ Record spend</button></div></div>
+<div class="grid stats">
+<div class="card" style="cursor:pointer" onclick="go('spend')"><div class="label">Total given</div><div class="value" id="given">₹0</div></div>
+<div class="card" style="cursor:pointer" onclick="go('spend')"><div class="label">Total spent</div><div class="value" id="spent">₹0</div></div>
+<div class="card" style="cursor:pointer" onclick="go('members')"><div class="label">Members</div><div class="value" id="mc">0</div></div>
+<div class="card" style="cursor:pointer" onclick="go('history')"><div class="label">Transactions</div><div class="value" id="tc">0</div></div>
+</div><div class="card" style="margin-top:15px;border-color:#38324f;background:linear-gradient(135deg,#171a24,#201d31);cursor:pointer" onclick="go('history')">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+<div><div class="label">Fund balance check</div><div id="fundBalance" class="value">₹0</div><div id="fundBalanceText" style="color:var(--muted);font-size:13px;margin-top:3px">Given money − spent money</div></div>
+<div style="font-size:28px">✓</div>
+</div></div>
+<div class="grid two" style="margin-top:15px"><div class="card"><h2>Balances</h2><div id="balances"></div></div><div class="card"><h2>Optimized settlement</h2><div id="quickSettle"></div></div></div>
+</section>
+
+<section id="members" class="view"><div class="head"><div><h1>Members</h1></div><button class="btn primary" onclick="memberModal()">＋ Add member</button></div><div id="memberHistoryTiles"></div><div class="card" style="margin-top:14px"><div class="members" id="memberList"></div></div></section>
+
+<section id="spend" class="view">
+<div class="head spend-head">
+  <div><div class="eyebrow">TRANSACTION WORKSPACE</div><h1>Spend / Split</h1><p>Record a payment and instantly see how the cost is distributed.</p></div>
+  <div class="spend-status"><span class="pulse-dot"></span> Ready to record</div>
+</div>
+<div class="spend-shell">
+  <div class="spend-hero"><div><div class="spend-kicker">NEW EXPENSE</div><h2>Who paid, how much, and who shares it?</h2><p>Everything stays together as one transaction in Overall History.</p></div><div class="spend-icon">↗</div></div>
+  <div class="card form spend-form">
+    <div class="step"><span>01</span><div><b>Payment</b><small>Choose the person who paid</small></div></div>
+    <div class="fields">
+      <div class="field full payer-field"><label>Who gave / paid the money?</label><div class="input-wrap"><span class="input-icon">◎</span><select id="payer"></select></div></div>
+      <div class="field amount-field"><label>Amount given / paid (₹)</label><div class="input-wrap amount-wrap"><span>₹</span><input id="paid" type="number" min="0" step=".01" placeholder="100" oninput="syncPaid()"></div></div>
+      <div class="field amount-field"><label id="splitLabel">Total amount to split (₹)</label><div class="input-wrap amount-wrap"><span>₹</span><input id="split" type="number" min="0" step=".01" placeholder="100" oninput="preview()"></div></div>
+    </div>
+    <div class="spend-divider"></div>
+    <div class="step"><span>02</span><div><b>Split method</b><small>Choose how the expense is shared</small></div></div>
+    <div class="choices spend-choices"><button type="button" id="equal" class="choice active" onclick="mode('equal')"><strong>÷</strong><span>Split equally<small>Everyone gets an equal share</small></span></button><button type="button" id="fixed" class="choice" onclick="mode('fixed')"><strong>₹</strong><span>Fixed amount<small>Add the same amount to each</small></span></button></div>
+    <div class="spend-divider"></div>
+    <div class="step"><span>03</span><div><b>Participants</b><small>Select everyone included in this expense</small></div></div>
+    <div class="checks spend-checks" id="checks"></div>
+    <div class="spend-divider"></div>
+    <div class="step"><span>04</span><div><b>Details</b><small>Add an optional note for later</small></div></div>
+    <div class="field full"><textarea id="spendNote" placeholder="e.g. Auto fare, dinner, tickets..."></textarea></div>
+    <div class="spend-summary"><div><span>LIVE SPLIT</span><b id="preview">Select participants to preview the split.</b></div><div class="summary-mark">✓</div></div>
+    <div class="spend-rule">The selected giver is credited with the full amount paid. Each selected participant is charged their split share.</div>
+    <button type="button" class="btn primary spend-save" onclick="spend()"><span>Save spend</span><b>→</b></button>
+  </div>
+</div>
+</section>
+
+<section id="history" class="view">
+<div class="head"><div><h1>History</h1><p>Overall History — every complete transaction is kept together in one block.</p></div><div><button class="btn" onclick="exportJSON()">Export backup</button> <button class="btn" onclick="document.getElementById('backupFile').click()">📥 Import backup</button> <input id="backupFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"> <button class="btn primary" onclick="downloadPDFReport()">📄 Detailed PDF report</button></div></div>
+<div class="card" style="margin-bottom:14px;border-color:#393250;background:linear-gradient(135deg,#171a24,#211e32);cursor:pointer" onclick="go('history')"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><div style="font-weight:900;font-size:17px">☷ Overall History</div><div style="color:var(--muted);font-size:12px;margin-top:4px">All complete Add/Spend transactions in one place</div></div><span style="font-size:22px">→</span></div></div><div id="historyBox"></div>
+</section>
+
+<section id="settlement" class="view"><div class="head"><div><h1>Optimized Settlement</h1></div></div><div class="grid two"><div class="card"><h2>Net balances</h2><div id="allBalances"></div></div><div class="card"><h2>Who pays whom</h2><div class="settle" id="settle"></div></div></div></section>
+</main></div>
+
+<div class="modal" id="modal"><div class="box"><div class="modalhead"><h2 id="mt"></h2><button class="icon" onclick="closeModal()">×</button></div><div id="mb" style="margin-top:16px"></div></div></div><div class="toast" id="toast"></div>
+
+<script>
+const KEY='fundflow_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{active:0,sheets:[{name:'Sheet 1',members:[],events:[]}]};
+let splitMode='equal',editMember=null;
+const S=()=>db.sheets[db.active], save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()};
+const fmt=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+const eid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const name=id=>S().members.find(m=>m.id===id)?.name||'Unknown';
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(x){let t=document.getElementById('toast');t.textContent=x;t.style.display='block';setTimeout(()=>t.style.display='none',1700)}
+function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById(v).classList.add('on');document.querySelectorAll('.nav,.mainnav button').forEach(x=>x.classList.toggle('on',x.dataset.v===v));window.scrollTo({top:0,behavior:'smooth'});render()}
+document.querySelectorAll('.nav').forEach(x=>x.onclick=()=>go(x.dataset.v));document.querySelectorAll('.mainnav button').forEach(x=>x.onclick=()=>go(x.dataset.v));
+
+function newSheet(){let n=prompt('Name for the new sheet / desktop:','New Sheet');if(!n)return;n=n.trim();if(!n)return;if(db.sheets.some(x=>x.name.toLowerCase()===n.toLowerCase()))return toast('A sheet with this name already exists');db.sheets.push({name:n,members:[],events:[]});db.active=db.sheets.length-1;save();toast('New sheet created')}
+function deleteSheet(){if(db.sheets.length===1)return toast('At least one sheet must remain');let current=db.sheets[db.active];if(!confirm('Delete sheet “'+current.name+'” and all of its members and history? This cannot be undone.'))return;db.sheets.splice(db.active,1);db.active=Math.max(0,Math.min(db.active,db.sheets.length-1));save();toast('Sheet deleted')}
+function clearSheet(){if(!confirm('Clear this entire sheet? Members and all history will be deleted.'))return;db.sheets[db.active]={name:S().name,members:[],events:[]};save();toast('Sheet cleared')}
+function renderTabs(){document.getElementById('tabs').innerHTML=db.sheets.map((s,i)=>`<button class="tab ${i===db.active?'on':''}" onclick="db.active=${i};save()">${esc(s.name)}</button>`).join('')}
+function memberModal(id=''){editMember=id;let m=S().members.find(x=>x.id===id);document.getElementById('mt').textContent=m?'Edit member':'Add member';document.getElementById('mb').innerHTML=`<div class="field"><label>Name</label><input id="mn" value="${esc(m?.name||'')}" placeholder="Member name"></div><button class="btn primary" style="margin-top:14px" onclick="saveMember()">Save</button>`;document.getElementById('modal').classList.add('open');setTimeout(()=>mn.focus(),50)}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function saveMember(){let n=mn.value.trim();if(!n)return toast('Enter a name');if(S().members.some(m=>m.name.toLowerCase()===n.toLowerCase()&&m.id!==editMember))return toast('Member already exists');if(editMember)S().members.find(m=>m.id===editMember).name=n;else S().members.push({id:eid(),name:n});closeModal();save();toast('Member saved')}
+function delMember(id){if(S().events.some(e=>e.person===id||e.payer===id||(e.parts||[]).some(p=>p.id===id)))return toast('This member is used in history');if(confirm('Remove '+name(id)+'?')){S().members=S().members.filter(m=>m.id!==id);save()}}
+
+function renderMembers(){
+  let box=document.getElementById('memberHistoryTiles');
+  if(!box)return;
+  if(!S().members.length){
+    box.innerHTML='<div class="card empty">No members yet. Add a member to see their history tile.</div>';
+    return;
+  }
+
+  box.innerHTML='<div class="member-history-grid">'+S().members.map(m=>{
+    let given=0,spent=0,details=[];
+    [...S().events].reverse().forEach(e=>{
+      let d=new Date(e.date).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+      if(e.type==='add' && e.person===m.id){
+        given+=Number(e.amount||0);
+        details.push(`<div class="member-detail"><div class="member-detail-head"><span>💰 Gave money</span><b class="give">+${fmt(e.amount)}</b></div><div class="member-detail-sub">${d}</div>${e.note?`<div class="member-detail-note">📝 ${esc(e.note)}</div>`:''}</div>`);
+      }
+      if(e.type==='spend'){
+        if(e.payer===m.id){
+          given+=Number(e.paid||0);
+          details.push(`<div class="member-detail"><div class="member-detail-head"><span>↗ Paid / gave</span><b class="give">+${fmt(e.paid)}</b></div><div class="member-detail-sub">${d} · split with ${e.parts.length} member${e.parts.length===1?'':'s'}</div>${e.note?`<div class="member-detail-note">📝 ${esc(e.note)}</div>`:''}</div>`);
+        }
+        let part=e.parts.find(q=>q.id===m.id);
+        if(part){
+          spent+=Number(part.share||0);
+          details.push(`<div class="member-detail"><div class="member-detail-head"><span>↘ Spent / share</span><b class="spend">-${fmt(part.share)}</b></div><div class="member-detail-sub">${d} · paid by ${esc(name(e.payer))}</div>${e.note?`<div class="member-detail-note">📝 ${esc(e.note)}</div>`:''}</div>`);
+        }
+      }
+    });
+
+    let net=given-spent;
+    return `<article class="member-tile">
+      <div class="member-tile-top">
+        <div class="member-tile-name">${esc(m.name)}</div>
+        <div class="member-tile-amounts">
+          <span class="give">Given ${fmt(given)}</span>
+          <span class="spend">Spent ${fmt(spent)}</span>
+        </div>
+      </div>
+      <div class="member-tile-scroll">${details.length?details.join(''):'<div class="empty" style="padding:45px 10px">No history for this member.</div>'}</div>
+      <div class="member-tile-footer">
+        <span>${details.length} record${details.length===1?'':'s'}</span>
+        <b class="${net>=0?'green':'red'}">Net ${net>=0?'+':''}${fmt(net)}</b>
+      </div>
+      <div class="member-tile-actions">
+        <button class="icon" title="Edit member" onclick="memberModal('${m.id}')">✎ Edit</button>
+        <button class="icon redbtn" title="Remove member" onclick="delMember('${m.id}')">× Remove</button>
+      </div>
+    </article>`;
+  }).join('')+'</div>';
+}
+function selects(){let o=S().members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('');let e=document.getElementById('payer');if(e){let old=e.value;e.innerHTML=o||'<option value="">Add a member first</option>';e.value=old&&S().members.some(m=>m.id===old)?old:(S().members[0]?.id||'')}}
+function checks(){let old=[...document.querySelectorAll('#checks input:checked')].map(x=>x.value);document.getElementById('checks').innerHTML=S().members.map(m=>`<label class="check"><input type="checkbox" value="${m.id}" ${old.includes(m.id)?'checked':''} onchange="preview()"> ${esc(m.name)}</label>`).join('')}
+function mode(x){splitMode=x;document.getElementById('equal').classList.toggle('active',x==='equal');document.getElementById('fixed').classList.toggle('active',x==='fixed');document.getElementById('splitLabel').textContent=x==='equal'?'Total amount to split (₹)':'Amount to add to EACH selected (₹)';if(x==='equal')document.getElementById('split').value=document.getElementById('paid').value;preview()}
+function syncPaid(){if(splitMode==='equal')split.value=paid.value;preview()}
+function preview(){let n=document.querySelectorAll('#checks input:checked').length,a=Number(split.value||0);document.getElementById('preview').textContent=n?(splitMode==='equal'?`${fmt(a)} ÷ ${n} = ${fmt(a/n)} per person.`:`${fmt(a)} × ${n} = ${fmt(a*n)} total allocated.`):'Select participants to preview the split.'}
+function addMoney(){let p=addWho.value,a=Number(addAmt.value),note=addNote.value.trim();if(!p||!(a>0))return toast('Enter person and amount');S().events.push({id:eid(),type:'add',person:p,amount:a,note,date:new Date().toISOString()});addAmt.value='';addNote.value='';save();toast('Money added')}
+function spend(){let p=payer.value,pa=Number(paid.value),a=Number(split.value),parts=[...document.querySelectorAll('#checks input:checked')].map(x=>x.value);if(!p||!(pa>0)||!(a>0)||!parts.length)return toast('Select who gave/paid, enter the amount, and select participants');if(splitMode==='equal'&&Math.abs(pa-a)>.009)return toast('Equal split total must equal amount paid');if(splitMode==='fixed'&&Math.abs(pa-a*parts.length)>.009)return toast('Fixed split total must equal amount paid');let each=splitMode==='equal'?a/parts.length:a;S().events.push({id:eid(),type:'spend',payer:p,paid:pa,parts:parts.map(id=>({id,share:each})),note:spendNote.value.trim(),date:new Date().toISOString()});paid.value='';split.value='';spendNote.value='';document.querySelectorAll('#checks input').forEach(x=>x.checked=false);save();toast('Spend recorded')}
+function bal(){let b=Object.fromEntries(S().members.map(m=>[m.id,0]));S().events.forEach(e=>{if(e.type==='add')b[e.person]+=e.amount;else{b[e.payer]+=e.paid;e.parts.forEach(p=>b[p.id]-=p.share)}});return b}
+function optimize(){let b=bal(),debt=Object.entries(b).filter(x=>x[1]<-.005).map(x=>({id:x[0],a:-x[1]})),cred=Object.entries(b).filter(x=>x[1]>.005).map(x=>({id:x[0],a:x[1]})),o=[],i=0,j=0;while(i<debt.length&&j<cred.length){let a=Math.min(debt[i].a,cred[j].a);o.push({from:debt[i].id,to:cred[j].id,a});debt[i].a-=a;cred[j].a-=a;if(debt[i].a<.005)i++;if(cred[j].a<.005)j++}return o}
+function balanceHTML(){let b=bal();return S().members.map(m=>`<div class="row"><b>${esc(m.name)}</b><span class="${b[m.id]>=0?'green':'red'}">${b[m.id]>=0?'+':''}${fmt(b[m.id])}</span></div>`).join('')||'<div class="empty">Add members first.</div>'}
+function settleHTML(){let o=optimize();return o.map(x=>`<div class="row"><span><b>${esc(name(x.from))}</b> <span class="arrow">→</span> <b>${esc(name(x.to))}</b></span><b>${fmt(x.a)}</b></div>`).join('')||'<div class="empty">No payments required.</div>'}
+function deleteEvent(eventId){
+ if(!confirm('Delete this transaction? This will recalculate all balances and settlement amounts.')) return;
+ S().events=S().events.filter(e=>e.id!==eventId);
+ save(); toast('Transaction deleted');
+}
+function renderHistory(){
+ let es=[...S().events].reverse();
+ if(!es.length){historyBox.innerHTML='<div class="card empty">No history yet. Record your first spend.</div>';return}
+ historyBox.innerHTML='<div class="history-list">'+es.map(e=>{
+   let d=new Date(e.date).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+   if(e.type==='add'){
+     return `<article class="history-card history-add">
+       <div class="history-top"><div class="history-main"><div class="history-title">💰 ${esc(name(e.person))} added money</div><div class="history-meta">${d}</div></div>
+       <div class="history-amount green">${fmt(e.amount)}</div></div>
+       <div class="history-body"><div class="split-line"><span>Money given</span><b class="green">${fmt(e.amount)}</b></div></div>
+       ${e.note?`<div class="history-note">📝 ${esc(e.note)}</div>`:''}
+       <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="delete-tx" onclick="deleteEvent('${e.id}')">🗑 Delete transaction</button></div>
+     </article>`;
+   }
+   return `<article class="history-card history-spend">
+     <div class="history-top"><div class="history-main"><div class="history-title">↗ ${esc(name(e.payer))} paid ${fmt(e.paid)}</div><div class="history-meta">${d} · Split among ${e.parts.length} member${e.parts.length===1?'':'s'}</div></div>
+     <div class="history-amount">${fmt(e.paid)}</div></div>
+     <div class="history-body"><div class="split-head">Complete split</div>
+     ${e.parts.map(p=>`<div class="split-line"><span>${esc(name(p.id))}</span><b>${fmt(p.share)}</b></div>`).join('')}</div>
+     ${e.note?`<div class="history-note">📝 ${esc(e.note)}</div>`:''}
+     <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="delete-tx" onclick="deleteEvent('${e.id}')">🗑 Delete whole spend</button></div>
+   </article>`;
+ }).join('')+'</div>';
+}
+function renderMemberHistory_REMOVED(){
+ let sel=document.getElementById('historyMember');
+ if(!sel)return;
+ let old=sel.value;
+ sel.innerHTML=S().members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('');
+ sel.value=old||S().members[0]?.id||'';
+ let mid=sel.value, es=[...S().events].reverse();
+ if(!mid){memberHistoryBox.innerHTML='<div class="empty">Add members first.</div>';return}
+ let rows=[];
+ es.forEach(e=>{
+   if(e.type==='add'&&e.person===mid) rows.push(`<tr><td>${new Date(e.date).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}</td><td>Gave money</td><td class="green"><b>+${fmt(e.amount)}</b></td><td>${esc(e.note||'—')}</td><td><button class="icon redbtn" onclick="deleteEvent('${e.id}')">🗑</button></td></tr>`);
+   if(e.type==='spend'){
+     let part=e.parts.find(x=>x.id===mid);
+     if(e.payer===mid || part) rows.push(`<tr><td>${new Date(e.date).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}</td><td>${e.payer===mid?'Paid':'Share of spend'}</td><td>${e.payer===mid?'<b>Paid '+fmt(e.paid)+'</b>':'Share '+fmt(part.share)}</td><td>${esc(e.note||'—')}</td><td><button class="icon redbtn" onclick="deleteEvent('${e.id}')">🗑</button></td></tr>`);
+   }
+ });
+ memberHistoryBox.innerHTML=rows.length?`<h3 style="margin-top:0">${esc(name(mid))}</h3><div class="scroll"><table><thead><tr><th>Date</th><th>Activity</th><th>Amount</th><th>Note</th><th></th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`:'<div class="empty">No activity for this member.</div>';
+}
+
+function render(){let s=S(),b=bal(),given=s.events.filter(e=>e.type==='spend').reduce((a,e)=>a+e.paid,0)+s.events.filter(e=>e.type==='add').reduce((a,e)=>a+e.amount,0),spent=s.events.filter(e=>e.type==='spend').reduce((a,e)=>a+e.paid,0);title.textContent=s.name;givenEl=given;document.getElementById('given').textContent=fmt(given);document.getElementById('spent').textContent=fmt(spent);let fb=given-spent;document.getElementById('fundBalance').textContent=fmt(fb);document.getElementById('fundBalance').className='value '+(Math.abs(fb)<0.005?'green':'red');document.getElementById('fundBalanceText').textContent=Math.abs(fb)<0.005?'✓ Given money and spent money match':'⚠ Mismatch — check the transaction history';mc.textContent=s.members.length;tc.textContent=s.events.length;renderTabs();renderMembers();selects();checks();balances.innerHTML='<div class="settle">'+balanceHTML()+'</div>';allBalances.innerHTML='<div class="settle">'+balanceHTML()+'</div>';quickSettle.innerHTML='<div class="settle">'+settleHTML()+'</div>';settle.innerHTML=settleHTML();renderHistory();preview()}
+function importJSON(event){
+  const file=event.target.files?.[0];
+  event.target.value='';
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const imported=JSON.parse(reader.result);
+      if(!imported || !Array.isArray(imported.sheets)) throw new Error('Invalid backup structure');
+      if(imported.sheets.length===0) throw new Error('Backup contains no sheets');
+
+      const cleanSheets=imported.sheets.map((s,i)=>{
+        if(!s || typeof s!=='object') throw new Error('Invalid sheet data');
+        return {
+          name:String(s.name||`Sheet ${i+1}`).trim()||`Sheet ${i+1}`,
+          members:Array.isArray(s.members)?s.members.map(m=>({id:String(m.id),name:String(m.name||'').trim()})).filter(m=>m.name):[],
+          events:Array.isArray(s.events)?s.events:[]
+        };
+      });
+
+      if(!confirm('Import this backup? Your current tracker data will be replaced by the backup. This cannot be undone.'))return;
+      db={active:Math.max(0,Math.min(Number(imported.active)||0,cleanSheets.length-1)),sheets:cleanSheets};
+      save();
+      toast('Backup imported successfully');
+      go('dashboard');
+    }catch(err){
+      console.error(err);
+      toast('Invalid or damaged backup JSON');
+    }
+  };
+  reader.readAsText(file);
+}
+function exportJSON(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='fundflow-backup.json';a.click()}
+render();
+</script>
+
+<script>
+async function downloadPDFReport(){
+  try{
+    if(!window.jspdf){
+      toast('Preparing PDF…');
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
+    }
+    const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'mm',format:'a4'});
+    const s=S(), b=bal(), events=[...s.events];
+    const generated=new Date().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+    const safe=v=>String(v??'').replace(/\s+/g,' ').trim();
+    const money=v=>'₹'+Number(v||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+
+    // Cover / summary.
+    doc.setFontSize(22); doc.text('Ayta Fund Tracker',14,18);
+    doc.setFontSize(15); doc.text(s.name,14,27);
+    doc.setFontSize(9); doc.setTextColor(100); doc.text('Detailed shareable fund report',14,34);
+    doc.text('Generated: '+generated,14,40);
+    doc.setTextColor(0);
+
+    let given=events.filter(e=>e.type==='spend').reduce((a,e)=>a+Number(e.paid||0),0)
+      +events.filter(e=>e.type==='add').reduce((a,e)=>a+Number(e.amount||0),0);
+    let spent=events.filter(e=>e.type==='spend').reduce((a,e)=>a+Number(e.paid||0),0);
+    let net=given-spent;
+
+    doc.autoTable({
+      startY:47,
+      head:[['Summary','Amount / Count']],
+      body:[
+        ['Total given',money(given)],
+        ['Total spent',money(spent)],
+        ['Fund balance check',money(net)],
+        ['Members',String(s.members.length)],
+        ['Transactions',String(events.length)]
+      ],
+      theme:'grid',
+      headStyles:{fillColor:[72,60,130]}
+    });
+
+    let y=doc.lastAutoTable.finalY+10;
+    doc.setFontSize(14); doc.text('Member balances',14,y); y+=4;
+    doc.autoTable({
+      startY:y,
+      head:[['Member','Given','Spent','Net balance']],
+      body:s.members.map(m=>{
+        let g=0,sp=0;
+        events.forEach(e=>{
+          if(e.type==='add' && e.person===m.id) g+=Number(e.amount||0);
+          if(e.type==='spend'){
+            if(e.payer===m.id) g+=Number(e.paid||0);
+            let part=(e.parts||[]).find(x=>x.id===m.id);
+            if(part) sp+=Number(part.share||0);
+          }
+        });
+        return [safe(m.name),money(g),money(sp),(g-sp>=0?'+':'')+money(g-sp)];
+      }),
+      theme:'grid',
+      headStyles:{fillColor:[72,60,130]}
+    });
+
+    // Complete transaction history, with each spend kept together.
+    y=doc.lastAutoTable.finalY+10;
+    for(let i=events.length-1;i>=0;i--){
+      let e=events[i];
+      const date=new Date(e.date).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+      if(y>265){doc.addPage();y=18;}
+      doc.setFontSize(13);
+      doc.text((e.type==='spend'?'Spend: ':'Given: ')+
+        (e.type==='spend'?safe(name(e.payer)):safe(name(e.person))),14,y);
+      y+=5;
+      doc.setFontSize(9); doc.setTextColor(100);
+      doc.text(date+(e.type==='spend'?' · Paid '+money(e.paid):' · '+money(e.amount)),14,y);
+      doc.setTextColor(0); y+=4;
+
+      if(e.type==='spend'){
+        doc.autoTable({
+          startY:y,
+          head:[['Participant','Share']],
+          body:(e.parts||[]).map(part=>[safe(name(part.id)),money(part.share)]),
+          theme:'striped',
+          headStyles:{fillColor:[72,60,130]},
+          margin:{left:14,right:14}
+        });
+        y=doc.lastAutoTable.finalY+3;
+      }else{
+        doc.autoTable({
+          startY:y,
+          head:[['Details','Amount']],
+          body:[['Money given',money(e.amount)]],
+          theme:'striped',
+          headStyles:{fillColor:[55,145,110]},
+          margin:{left:14,right:14}
+        });
+        y=doc.lastAutoTable.finalY+3;
+      }
+      if(e.note){
+        doc.setFontSize(9); doc.setTextColor(80);
+        const lines=doc.splitTextToSize('Note: '+safe(e.note),182);
+        doc.text(lines,14,y); y+=lines.length*4+5; doc.setTextColor(0);
+      }else y+=4;
+    }
+
+    // Final settlement.
+    doc.addPage();
+    doc.setFontSize(16); doc.text('Optimized Settlement',14,18);
+    const transfers=optimize();
+    doc.autoTable({
+      startY:25,
+      head:[['From','To','Amount']],
+      body:transfers.map(x=>[safe(name(x.from)),safe(name(x.to)),money(x.a)]),
+      bodyStyles:{fontSize:10},
+      theme:'grid',
+      headStyles:{fillColor:[72,60,130]}
+    });
+    doc.setFontSize(8); doc.setTextColor(110);
+    doc.text('Generated from the current sheet data. Share this PDF with participants as a transaction report.',14,285);
+
+    const file=(s.name||'Ayta-Fund-Tracker').replace(/[^\w\-]+/g,'-')+'-report.pdf';
+    doc.save(file);
+    toast('PDF report downloaded');
+  }catch(err){
+    console.error(err);
+    toast('PDF could not be generated');
+  }
+}
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src=src; s.onload=resolve; s.onerror=()=>reject(new Error('Could not load PDF library'));
+    document.head.appendChild(s);
+  });
+}
+</script>
+
+</body></html>
+<style>
+@media(max-width:850px){
+ .history-list{width:100%;gap:14px}
+ .history-card{width:100%;padding:15px;border-radius:18px}
+ .history-top{gap:9px}
+ .history-title{font-size:15px}
+ .history-amount{font-size:18px}
+ .history-body{padding:10px}
+ .delete-tx{font-size:12px}
+ .history-note{line-height:1.45}
+}
+</style>
+<style>@media(max-width:500px){.logo{font-size:16px;white-space:nowrap}.top{gap:6px}.top .tabs{max-width:125px}.top .icon{min-width:35px;min-height:35px;padding:6px;font-size:13px}}</style>
